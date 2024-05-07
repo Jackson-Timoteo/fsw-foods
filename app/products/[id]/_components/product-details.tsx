@@ -4,6 +4,7 @@ import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
 import { Button } from "@/app/_components/ui/button";
+import { CartContext } from "@/app/_context/cart";
 import {
   calculateProductTotalPrice,
   formatCurrency,
@@ -11,7 +12,7 @@ import {
 import { Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
@@ -32,6 +33,11 @@ const ProductDetails = ({
   complementaryProducts,
 }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
+  const { addProductToCart, products } = useContext(CartContext);
+
+  const handleAddToCartClick = () => addProductToCart(product);
+
+  console.log(product);
 
   const handleIncreaseQuantityClick = () =>
     setQuantity((currentState) => currentState + 1);
@@ -119,7 +125,9 @@ const ProductDetails = ({
       </div>
 
       <div className="mt-6 px-5">
-        <Button className="w-full font-semibold">Adicionar à Sacola</Button>
+        <Button className="w-full font-semibold" onClick={handleAddToCartClick}>
+          Adicionar à Sacola
+        </Button>
       </div>
     </div>
   );
