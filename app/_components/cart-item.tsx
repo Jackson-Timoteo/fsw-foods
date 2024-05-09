@@ -1,14 +1,30 @@
 import Image from "next/image";
-import { CartProduct } from "../_context/cart";
+import { CartContext, CartProduct } from "../_context/cart";
 import { calculateProductTotalPrice, formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
+import { useContext } from "react";
 
 interface CartItemProps {
   cartProduct: CartProduct;
 }
 
 const CarItem = ({ cartProduct }: CartItemProps) => {
+  const {
+    descreaseProductQuantity,
+    increaseProductQuantity,
+    removeProductFromCart,
+  } = useContext(CartContext);
+
+  const handleDescreaseQuantity = () =>
+    descreaseProductQuantity(cartProduct.id);
+
+  const handleIncreaseQuantity = () => increaseProductQuantity(cartProduct.id);
+
+  const handleRemoveClick = () => removeProductFromCart(cartProduct.id);
+
+  console.log(handleRemoveClick);
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -43,12 +59,16 @@ const CarItem = ({ cartProduct }: CartItemProps) => {
               variant="ghost"
               className="h-8 w-8 border border-solid border-muted-foreground"
             >
-              <ChevronLeftIcon size={18} />
+              <ChevronLeftIcon size={18} onClick={handleDescreaseQuantity} />
             </Button>
 
-            <span className="w-3 text-sm">{cartProduct.quantity}</span>
+            <span className="w-5 text-sm">{cartProduct.quantity}</span>
 
-            <Button size="icon" className="h-8 w-8">
+            <Button
+              size="icon"
+              className="h-8 w-8"
+              onClick={handleIncreaseQuantity}
+            >
               <ChevronRightIcon size={18} />
             </Button>
           </div>
@@ -56,6 +76,14 @@ const CarItem = ({ cartProduct }: CartItemProps) => {
       </div>
 
       {/* BOTAO DE DEELTAR */}
+
+      <Button
+        size="icon"
+        className="h-8 w-8 border-solid border-muted-foreground"
+        onClick={handleRemoveClick}
+      >
+        <TrashIcon size={18} />
+      </Button>
     </div>
   );
 };
