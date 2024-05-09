@@ -5,7 +5,12 @@ import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
 import { Button } from "@/app/_components/ui/button";
-import { Sheet, SheetContent } from "@/app/_components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/app/_components/ui/sheet";
 import { CartContext } from "@/app/_context/cart";
 import {
   calculateProductTotalPrice,
@@ -35,17 +40,16 @@ const ProductDetails = ({
   complementaryProducts,
 }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { addProductToCart, products } = useContext(CartContext);
 
   console.log(products);
 
-  const handleAddToCartClick = () => addProductToCart(product);
-
-  // const handleAddToCartClick = () =>
-  //   addProductToCart{product}
-  //   setIsCartOpen{true}
-  // };
+  const handleAddToCartClick = () => {
+    addProductToCart(product);
+    setIsCartOpen(true);
+  };
 
   const handleIncreaseQuantityClick = () =>
     setQuantity((currentState) => currentState + 1);
@@ -145,8 +149,11 @@ const ProductDetails = ({
         </div>
       </div>
 
-      <Sheet>
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
         <SheetContent>
+          <SheetHeader>
+            <SheetTitle className="text-left">Sacola</SheetTitle>
+          </SheetHeader>
           <Cart />
         </SheetContent>
       </Sheet>
