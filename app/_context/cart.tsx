@@ -1,15 +1,39 @@
 "use client";
 
-import { Product } from "@prisma/client";
-import { ReactNode, createContext, useState } from "react";
+import { Prisma, Product } from "@prisma/client";
+import { ReactNode, createContext, useMemo, useState } from "react";
+import { calculateProductTotalPrice } from "../_helpers/price";
 
-export interface CartProduct extends Product {
+export interface CartProduct
+  extends Prisma.ProductGetPayload<{
+    include: {
+      restaurant: {
+        select: {
+          deliveryFee: true;
+        };
+      };
+    };
+  }> {
   quantity: number;
 }
 
 interface ICartContext {
   products: CartProduct[];
-  addProductToCart: (product: Product, quantity: number) => void;
+  subtotalPrice: number;
+  totalPrice: number;
+  totalDiscounts: number;
+  addProductToCart: (
+    product: Prisma.ProductGetPayload<{
+      include: {
+        restaurant: {
+          select: {
+            deliveryFee: true;
+          };
+        };
+      };
+    }>,
+    quantity: number,
+  ) => void;
   descreaseProductQuantity: (productId: string) => void;
   increaseProductQuantity: (productId: string) => void;
   removeProductFromCart: (productId: string) => void;
@@ -17,6 +41,9 @@ interface ICartContext {
 
 export const CartContext = createContext<ICartContext>({
   products: [],
+  subtotalPrice: 0,
+  totalPrice: 0,
+  totalDiscounts: 0,
   addProductToCart: () => {},
   descreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
@@ -25,6 +52,20 @@ export const CartContext = createContext<ICartContext>({
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProduct[]>([]);
+
+  const subtotalPrice = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + Number(product.price) * product.quantity;
+    }, 0);
+  }, [products]);
+
+  const totalPrice = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + calculateProductTotalPrice(product) * product.quantity;
+    }, 0);
+  }, [products]);
+
+  const totalDiscounts = subtotalPrice - totalPrice;
 
   const descreaseProductQuantity = (productId: string) => {
     return setProducts((prev) =>
@@ -62,11 +103,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const removeProductFromCart = (productId: string) => {
     return setProducts((prev) =>
-      prev.filter((product) => product.id === productId),
+      prev.filter((product) => product.id !== productId),
     );
   };
 
-  const addProductToCart = (product: Product, quantity: number) => {
+  const addProductToCart = (
+    product: Prisma.ProductGetPayload<{
+      include: {
+        restaurant: {
+          select: {
+            deliveryFee: true;
+          };
+        };
+      };
+    }>,
+    quantity: number,
+  ) => {
     // verificar se o produto se esta no carrinh;
 
     const isProductAlreadyOnCart = products.some(
@@ -95,6 +147,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider
       value={{
         products,
+        subtotalPrice,
+        totalPrice,
+        totalDiscounts,
         addProductToCart,
         descreaseProductQuantity,
         increaseProductQuantity,
