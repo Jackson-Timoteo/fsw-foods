@@ -10,58 +10,62 @@ const Cart = () => {
   const { products, subtotalPrice, totalPrice, totalDiscounts } =
     useContext(CartContext);
   return (
-    <div className="py-5">
-      <div className="space-y-4">
+    <div className="flex h-full flex-col py-5">
+      <div className="flex-auto space-y-4">
         {products.map((product) => (
           <CarItem key={product.id} cartProduct={product} />
         ))}
       </div>
 
       {/* TOTAL */}
-      <div className="mt-6">
-        <Card>
-          <CardContent className="space-y-2 p-5">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-fofregund">Subtotal</span>
-              <span>{formatCurrency(subtotalPrice)}</span>
-            </div>
 
-            <Separator />
+      {products.length > 0 && (
+        <>
+          <div className="mt-6">
+            <Card>
+              <CardContent className="space-y-2 p-5">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-fofregund">Subtotal</span>
+                  <span>{formatCurrency(subtotalPrice)}</span>
+                </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <span className=" text-muted-foreground"> Descontos</span>
-              <span> - {formatCurrency(totalDiscounts)}</span>
-            </div>
+                <Separator />
 
-            <Separator />
+                <div className="flex items-center justify-between text-sm">
+                  <span className=" text-muted-foreground"> Descontos</span>
+                  <span> - {formatCurrency(totalDiscounts)}</span>
+                </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <span className=" text-muted-foreground">Entrega</span>
+                <Separator />
 
-              {Number(products[0].restaurant.deliveryFee) === 0 ? (
-                <span className="font-semibold uppercase text-primary">
-                  Grátis
-                </span>
-              ) : (
-                formatCurrency(Number(products[0].restaurant.deliveryFee))
-              )}
-            </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className=" text-muted-foreground">Entrega</span>
 
-            <Separator />
+                  {Number(products?.[0].restaurant.deliveryFee) === 0 ? (
+                    <span className="font-semibold uppercase text-primary">
+                      Grátis
+                    </span>
+                  ) : (
+                    formatCurrency(Number(products?.[0].restaurant.deliveryFee))
+                  )}
+                </div>
 
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span>Total:</span>
-              <span>{formatCurrency(totalPrice)}</span>
-            </div>
+                <Separator />
 
-            <Separator />
-          </CardContent>
-        </Card>
-      </div>
+                <div className="flex items-center justify-between text-xs font-semibold">
+                  <span>Total:</span>
+                  <span>{formatCurrency(totalPrice)}</span>
+                </div>
 
-      {/* Finalizar pedido */}
+                <Separator />
+              </CardContent>
+            </Card>
+          </div>
 
-      <Button className="mt-6 w-full">Finalizar pedido</Button>
+          {/* Finalizar pedido */}
+          <Button className="mt-6 w-full">Finalizar pedido</Button>
+        </>
+      )}
     </div>
   );
 };

@@ -22,7 +22,11 @@ interface ICartContext {
   subtotalPrice: number;
   totalPrice: number;
   totalDiscounts: number;
-  addProductToCart: (
+  addProductToCart: ({
+    product,
+    quantity,
+    emptyCart,
+  }: {
     product: Prisma.ProductGetPayload<{
       include: {
         restaurant: {
@@ -31,9 +35,10 @@ interface ICartContext {
           };
         };
       };
-    }>,
-    quantity: number,
-  ) => void;
+    }>;
+    quantity: number;
+    emptyCart?: boolean | undefined;
+  }) => void;
   descreaseProductQuantity: (productId: string) => void;
   increaseProductQuantity: (productId: string) => void;
   removeProductFromCart: (productId: string) => void;
@@ -107,7 +112,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const addProductToCart = (
+  const addProductToCart = ({
+    product,
+    quantity,
+    emptyCart,
+  }: {
     product: Prisma.ProductGetPayload<{
       include: {
         restaurant: {
@@ -116,13 +125,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           };
         };
       };
-    }>,
-    quantity: number,
-  ) => {
-    // verificar se o produto se esta no carrinh;
+    }>;
+    quantity: number;
+    emptyCart?: boolean;
+  }) => {
+    // verificar se há produto de outro restaurante n ocarrinho
+    if (emptyCart) {
+      setProducts([]);
+    }
 
+    // verificar se o produto se esta no carrinho;
     const isProductAlreadyOnCart = products.some(
-      (Cartproduct) => Cartproduct.id === product.id,
+      (cartProduct) => cartProduct.id === product.id,
     );
 
     if (isProductAlreadyOnCart) {

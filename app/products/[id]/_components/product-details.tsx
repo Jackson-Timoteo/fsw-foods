@@ -4,6 +4,15 @@ import Cart from "@/app/_components/cart";
 import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/_components/ui/alert-dialog";
 import { Button } from "@/app/_components/ui/button";
 import {
   Sheet,
@@ -17,6 +26,7 @@ import {
   formatCurrency,
 } from "@/app/_helpers/price";
 import { Prisma } from "@prisma/client";
+import { AlertDialogContent } from "@radix-ui/react-alert-dialog";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -40,15 +50,32 @@ const ProductDetails = ({
   complementaryProducts,
 }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false);
+
   const { addProductToCart, products } = useContext(CartContext);
 
-  console.log(products);
+  const addToCart = ({ emptyCart }: { emptyCart?: boolean }) => {
+    addProductToCart({ product, quantity, emptyCart });
+    setIsCartOpen(true);
+  };
 
   const handleAddToCartClick = () => {
-    addProductToCart(product, quantity);
-    setIsCartOpen(true);
+    // VERIFICAR SE HA ALGUM PRODUTO DE OUTRO REST NO CARRINHO
+
+    const hanDifferentRestaurantProduct = products.some(
+      (cartProduct) => cartProduct.restaurantId !== product.restaurantId,
+    );
+    /// SE EXISTER, ABRIR UM AVISO
+
+    if (hanDifferentRestaurantProduct) {
+      return setIsConfirmationDialogOpen(true);
+    }
+
+    addToCart({
+      emptyCart: false,
+    });
   };
 
   const handleIncreaseQuantityClick = () =>
@@ -157,6 +184,28 @@ const ProductDetails = ({
           <Cart />
         </SheetContent>
       </Sheet>
+
+      <AlertDialog
+        open={isConfirmationDialogOpen}
+        onOpenChange={setIsConfirmationDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Você só pode adicionar items de um restaurante por vez.
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Seu carrinho será esvaziado!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
+              Envaziar sacola e adicionar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
