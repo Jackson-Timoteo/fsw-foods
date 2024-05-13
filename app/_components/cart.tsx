@@ -11,16 +11,16 @@ const Cart = () => {
     useContext(CartContext);
   return (
     <div className="flex h-full flex-col py-5">
-      <div className="flex-auto space-y-4">
-        {products.map((product) => (
-          <CarItem key={product.id} cartProduct={product} />
-        ))}
-      </div>
-
       {/* TOTAL */}
 
-      {products.length > 0 && (
+      {products.length > 0 ? (
         <>
+          <div className="flex-auto space-y-4">
+            {products.map((product) => (
+              <CarItem key={product.id} cartProduct={product} />
+            ))}
+          </div>
+
           <div className="mt-6">
             <Card>
               <CardContent className="space-y-2 p-5">
@@ -65,6 +65,11 @@ const Cart = () => {
           {/* Finalizar pedido */}
           <Button className="mt-6 w-full">Finalizar pedido</Button>
         </>
+      ) : (
+        <h2 className="text-center font-medium">
+          Seu carrinho está vazio. Para finalizar adicione pelo menos um
+          produto.
+        </h2>
       )}
     </div>
   );
