@@ -23,8 +23,6 @@ const CarItem = ({ cartProduct }: CartItemProps) => {
 
   const handleRemoveClick = () => removeProductFromCart(cartProduct.id);
 
-  console.log(handleRemoveClick);
-
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
