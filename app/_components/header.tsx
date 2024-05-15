@@ -23,7 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 
 const Header = () => {
-  const { data, status } = useSession();
+  const { data } = useSession();
 
   const handleSignOutClick = () => signOut();
   const handleSignInClick = () => signIn();
@@ -78,10 +78,6 @@ const Header = () => {
                     </p>
                   </div>
                 </div>
-
-                <Button size="icon" onClick={handleSignOutClick}>
-                  <LogOutIcon size={20} />
-                </Button>
               </div>
             </>
           ) : (
@@ -108,26 +104,41 @@ const Header = () => {
               <span className="block">Inicio</span>
             </Button>
 
-            <Button
-              variant="ghost"
-              className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
-            >
-              <ScrollTextIcon size={18} />
-              <span className="block">Meus Pedidos</span>
-            </Button>
+            {data?.user && (
+              <>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
+                >
+                  <ScrollTextIcon size={18} />
+                  <span className="block">Meus Pedidos</span>
+                </Button>
 
-            <Button
-              variant="ghost"
-              className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
-            >
-              <HeartIcon size={18} />
-              <span className="block">Restaurantes Favoritos</span>
-            </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
+                >
+                  <HeartIcon size={18} />
+                  <span className="block">Restaurantes Favoritos</span>
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="py-6">
             <Separator />
           </div>
+
+          {data?.user && (
+            <Button
+              variant="ghost"
+              className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
+              onClick={handleSignOutClick}
+            >
+              <LogOutIcon size={18} />
+              <span className="block">Sair da Conta</span>
+            </Button>
+          )}
         </SheetContent>
       </Sheet>
     </div>
