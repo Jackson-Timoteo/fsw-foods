@@ -1,14 +1,53 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../_context/cart";
 import CarItem from "./cart-item";
 import { Card, CardContent } from "./ui/card";
 import { formatCurrency } from "../_helpers/price";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { createOrder } from "../_actions/order";
+import { OrderStatus } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 
 const Cart = () => {
-  const { products, subtotalPrice, totalPrice, totalDiscounts } =
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+
+  const { data } = useSession();
+
+  const { products, subtotalPrice, totalPrice, totalDiscounts, clearCart } =
     useContext(CartContext);
+
+  const handleFinishOrderClick = async () => {
+    if (!data?.user) return;
+
+    const restaurant = products[0].restaurant;
+
+    try {
+      setIsSubmitLoading(true);
+      await createOrder({
+        subtotalPrice,
+        totalDiscounts,
+        totalPrice,
+        deliveryFee: restaurant.deliveryFee,
+        deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
+        restaurant: {
+          connect: { id: restaurant.id },
+        },
+        status: OrderStatus.CONFIRMED,
+        user: {
+          connect: { id: data.user.id },
+        },
+      });
+
+      clearCart();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-full flex-col py-5">
       {/* TOTAL */}
@@ -63,7 +102,16 @@ const Cart = () => {
           </div>
 
           {/* Finalizar pedido */}
-          <Button className="mt-6 w-full">Finalizar pedido</Button>
+          <Button
+            className="mt-6 w-full"
+            onClick={handleFinishOrderClick}
+            disabled={isSubmitLoading}
+          >
+            {isSubmitLoading && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Finalizar pedido
+          </Button>
         </>
       ) : (
         <h2 className="text-center font-medium">
