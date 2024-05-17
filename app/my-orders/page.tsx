@@ -18,7 +18,11 @@ const NyOrdersPage = async () => {
     },
     include: {
       restaurant: true,
-      products: true,
+      products: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
@@ -29,7 +33,7 @@ const NyOrdersPage = async () => {
         <h2 className="font-semibold">Meus Pedidos</h2>
       </div>
 
-      <div>
+      <div className="space-y-3">
         {orders.map((order) => (
           <OrderItem key={order.id} order={order} />
         ))}
