@@ -7,6 +7,7 @@ import { Separator } from "@/app/_components/ui/separator";
 import { formatCurrency } from "@/app/_helpers/price";
 import { Order, OrderStatus, Prisma } from "@prisma/client";
 import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
 
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
@@ -24,15 +25,15 @@ interface OrderItemProps {
 const getOrderStatusLabel = (status: OrderStatus) => {
   switch (status) {
     case "CANCELED":
-      return "Cancelado";
+      return "Pedido Cancelado";
     case "COMPLETED":
-      return "Finalizado";
+      return "Pedido Finalizado";
     case "CONFIRMED":
-      return "Confirmado";
+      return "Pedido Confirmado";
     case "DELIVERING":
       return "Pedido a Caminho ";
     case "PREPARING":
-      return "Preparando";
+      return "Seu pedido está sendo Preparado";
   }
 };
 
@@ -42,7 +43,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
       <CardContent className="p-5">
         <div
           className={`w-fit rounded-full bg-muted px-3 py-1 text-muted-foreground ${
-            order.status !== "COMPLETED" && "bg-green-500 text-white"
+            order.status !== "COMPLETED" && "bg-green-700 text-white"
           }`}
         >
           <span className="block text-xs font-semibold">
@@ -61,8 +62,15 @@ const OrderItem = ({ order }: OrderItemProps) => {
             </span>
           </div>
 
-          <Button variant="ghost" size="icon" className="h-5 w-5">
-            <ChevronRightIcon />
+          <Button
+            variant="link"
+            size="icon"
+            className="h-5 w-5 text-black"
+            asChild
+          >
+            <Link href={`/restaurants/${order.restaurantId}`}>
+              <ChevronRightIcon />
+            </Link>
           </Button>
         </div>
 
@@ -70,7 +78,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
           <Separator />
         </div>
 
-        <div>
+        <div className="space-y-2">
           {order.products.map((product) => (
             <div key={product.id} className="flex gap-3">
               <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground">
