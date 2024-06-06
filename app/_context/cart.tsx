@@ -142,13 +142,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       include: {
         restaurant: {
           select: {
+            id: true;
             deliveryFee: true;
+            deliveryTimeMinutes: true;
           };
         };
       };
     }>;
     quantity: number;
-    emptyCart?: boolean;
+    emptyCart?: boolean | undefined;
   }) => {
     // verificar se há produto de outro restaurante n ocarrinho
     if (emptyCart) {
