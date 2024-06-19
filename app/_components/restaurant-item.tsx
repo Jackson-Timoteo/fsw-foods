@@ -31,7 +31,7 @@ const RestaurantItem = ({
     if (!userId) return;
     try {
       await favoriteRestaurant(userId, restaurant.id);
-      toast.success("Restaurante adicionado aos Favoritos");
+      toast.success("Restaurante adicionado aos Favoritos, adicione outroo");
     } catch (error) {
       toast.error("Restaurante já favoritado.");
     }
