@@ -7,7 +7,10 @@ import { formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "../_lib/utils";
-import { favoriteRestaurant } from "../_actions/restaurant";
+import {
+  favoriteRestaurant,
+  unfavoriteRestaurant,
+} from "../_actions/restaurant";
 import { toast } from "sonner";
 
 interface RestaurantItemProps {
@@ -30,8 +33,13 @@ const RestaurantItem = ({
   const handleFavoriteClick = async () => {
     if (!userId) return;
     try {
+      if (isFavorite) {
+        await unfavoriteRestaurant(userId, restaurant.id);
+        return toast.success("Restaurante removido dos favoritos.");
+      }
+
       await favoriteRestaurant(userId, restaurant.id);
-      toast.success("Restaurante adicionado aos Favoritos, adicione outroo");
+      toast.success("Restaurante adicionado aos Favoritos, adicione outro!");
     } catch (error) {
       toast.error("Restaurante já favoritado.");
     }
@@ -61,9 +69,10 @@ const RestaurantItem = ({
 
           {userId && (
             <Button
-              onClick={handleFavoriteClick}
               size="icon"
-              className={`absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700 ${isFavorite ?? "bg-primary"}`}
+              className={`absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700 
+              ${isFavorite ?? "bg-primary hover:bg-gray-700"}`}
+              onClick={handleFavoriteClick}
             >
               <HeartIcon size={16} className="fill-white" />
             </Button>
