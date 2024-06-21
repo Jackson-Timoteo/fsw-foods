@@ -18,7 +18,6 @@ const RestaurantList = async () => {
           key={restaurant.id}
           restaurant={restaurant}
           className=""
-          userId={session?.user?.id}
           userFavoriteRestaurants={userFavoriteRestaurants}
         />
       ))}
