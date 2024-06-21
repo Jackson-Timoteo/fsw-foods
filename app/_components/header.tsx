@@ -64,6 +64,7 @@ const Header = () => {
                   <Avatar>
                     <AvatarImage
                       src={data?.user?.image as string | undefined}
+                      alt="Data"
                     />
                     <AvatarFallback>
                       {data?.user?.name?.split(" ")[0][0]}

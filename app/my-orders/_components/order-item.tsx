@@ -72,7 +72,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
         <div className="flex items-center justify-between pt-3">
           <div className="flex items-center gap-2">
             <Avatar className="h-7 w-7">
-              <AvatarImage src={order.restaurant.imageUrl} />
+              <AvatarImage src={order.restaurant.imageUrl} alt="Order" />
             </Avatar>
 
             <span className="text-sm font-semibold">
