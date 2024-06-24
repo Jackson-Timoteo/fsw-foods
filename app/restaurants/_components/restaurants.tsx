@@ -38,7 +38,7 @@ const Restaurants = () => {
               key={restaurant.id}
               restaurant={restaurant}
               className=""
-              userFavoriteRestaurants={}
+              userFavoriteRestaurants={userFavoriteRestaurants}
             />
           ))}
         </div>
