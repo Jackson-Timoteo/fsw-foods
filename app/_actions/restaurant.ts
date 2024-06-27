@@ -7,25 +7,31 @@ export const toggleFavoriteRestaurant = async (
   userId: string,
   restaurantId: string,
 ) => {
-  await db.userFavoriteRestaurant.create({
-    data: {
+  const isFavorite = await db.userFavoriteRestaurant.findFirst({
+    where: {
       userId,
       restaurantId,
     },
   });
-  revalidatePath("/");
-};
 
-export const unfavoriteRestaurant = async (
-  userId: string,
-  restaurantId: string,
-) => {
-  await db.userFavoriteRestaurant.delete({
-    where: {
-      userId_restaurantId: {
-        userId,
-        restaurantId,
+  if (isFavorite) {
+    await db.userFavoriteRestaurant.delete({
+      where: {
+        userId_restaurantId: {
+          userId,
+          restaurantId,
+        },
       },
+    });
+
+    revalidatePath("/");
+    return;
+  }
+
+  await db.userFavoriteRestaurant.create({
+    data: {
+      userId,
+      restaurantId,
     },
   });
 
