@@ -8,6 +8,7 @@ import { db } from "./_lib/prisma";
 import PromoBanner from "./_components/promo-banner";
 import RestaurantList from "./_components/restaurant-list";
 import Link from "next/link";
+import "./globals.css";
 
 const fetch = async () => {
   const getProducts = db.product.findMany({
@@ -53,30 +54,32 @@ const Home = async () => {
   return (
     <>
       <Header />
-      <div className="px-5 pt-6">
+      <div className="container mx-auto px-4">
         <Search />
       </div>
 
-      <div className="px-5 pt-6">
+      <div className="container mx-auto px-4 pt-6">
         <CategoryList />
       </div>
 
-      <div className="px-5 pt-6">
+      <div className="container mx-auto px-4 pt-6">
         <Link href={`/categories/${pizzasCategory?.id}/products`}>
           <PromoBanner
             src="/promo-banner-01.png"
             alt="Até 30% de desconto em pizzas!"
+            className="h-auto w-full"
           />
         </Link>
       </div>
 
-      <div className="space-y-4 pt-6">
-        <div className="flex items-center justify-between px-5">
-          <h2 className="font-semibold">Pedidos Recomendados</h2>
-
+      <div className="container mx-auto space-y-4 px-4 pt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold md:text-xl">
+            Pedidos Recomendados
+          </h2>
           <Button
             variant="ghost"
-            className="h-fit p-0 text-primary hover:bg-transparent"
+            className="flex h-fit items-center p-0 text-primary hover:bg-transparent"
             asChild
           >
             <Link href="/products/recommended">
@@ -88,21 +91,24 @@ const Home = async () => {
         <ProductList products={products} />
       </div>
 
-      <div className="px-5 pt-6">
+      <div className="container mx-auto px-4 pt-6">
         <Link href={`/categories/${burguersCategory?.id}/products`}>
           <PromoBanner
             src="/promo-banner-02.png"
             alt="A partir de R$17,90 em lanches"
+            className="h-auto w-full"
           />
         </Link>
       </div>
 
-      <div className="space-y-4 py-6">
-        <div className="flex items-center justify-between px-5">
-          <h2 className="font-semibold">Restaurantes Recomendados</h2>
+      <div className="container mx-auto space-y-4 px-4 py-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold md:text-xl">
+            Restaurantes Recomendados
+          </h2>
           <Button
             variant="ghost"
-            className="h-fit p-0 text-primary hover:bg-transparent"
+            className="flex h-fit items-center p-0 text-primary hover:bg-transparent"
             asChild
           >
             <Link href={"/restaurants/recommended"}>

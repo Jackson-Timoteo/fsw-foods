@@ -57,3 +57,41 @@
     @apply text-foreground antialiased;
   }
 }
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0.5rem; /* Maior espaçamento para telas maiores */
+    margin-top: 0.2rem; /* Espaço entre o topo e o conteúdo */
+    margin-bottom: 0.2rem; /* Espaço entre o conteúdo e o rodapé */
+  }
+  /* Ajuste de tamanho de fonte para telas pequenas */
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Para telas médias (ex.: tablets em modo retrato) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    padding: 0.5rem; /* Maior espaçamento para telas maiores */
+    margin-top: 0.2rem; /* Espaço entre o topo e o conteúdo */
+    margin-bottom: 0.2rem; /* Espaço entre o conteúdo e o rodapé */
+  }
+  /* Ajuste de tamanho de fonte para telas médias */
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Para telas grandes (ex.: desktops) */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0.5rem; /* Maior espaçamento para telas maiores */
+    margin-top: 0.2rem; /* Espaço entre o topo e o conteúdo */
+    margin-bottom: 0.2rem; /* Espaço entre o conteúdo e o rodapé */
+  }
+  /* Ajuste de tamanho de fonte para telas grandes */
+  body {
+    font-size: 18px;
+  }
+}
